@@ -23,8 +23,8 @@ Now you must download a bundle of trusted certificate authorities and add them t
 
 download the CA bundle from:
 
-[https://curl.sw/ca/cacert.pem  
-](https://curl.se/docs/caextract.html)  
+https://curl.se/docs/caextract.html
+
 save this to the same config folder (C:\MAMP\Config)  
 
 Navigate to:  
