@@ -3,7 +3,7 @@
 $pageTitle = 'FlickPick';
 
 // Load the TMDB token from a file outside the public htdocs folder.
-$tmdbConfig = require 'C:/MAMP/config/tmdb.php'; // Include the TMDB configuration file
+$tmdbConfig = require dirname(__DIR__, 2) . '/config/tmdb.php'; // Include the TMDB configuration file
 $tmdbToken = trim($tmdbConfig['token']); // Get the TMDB API token from the configuration file
 
 // Create a request for movies that are trending today.
