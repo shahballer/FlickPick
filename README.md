@@ -36,3 +36,10 @@ add the following lines to the bottom of the file:
 curl.cainfo = "C:\MAMP\Config\cacert.pem"
 openssl.cafile = "C:\MAMP\Config\cacert.pem"
 ```
+
+Mac users:
+
+```ini
+curl.cainfo = "/Applications/MAMP/config/cacert.pem"
+openssl.cafile = "/Applications/MAMP/config/cacert.pem"
+```
