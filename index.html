@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FlickPick - Swipe Wireframe</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- NAV BAR -->
+  <header class="navbar">
+    <nav class="nav-left">
+      <a href="#">Login</a>
+      <a href="#">Random</a>
+      <a href="#">Watch Later</a>
+      <a href="#">Profile</a>
+    </nav>
+    <div class="nav-right">
+      <span class="logo">FlickPick</span>
+    </div>
+  </header>
+
+  <!-- MAIN SWIPE AREA -->
+  <main class="swipe-area">
+
+    <!-- Small left swipe button -->
+    <button class="swipe-btn swipe-left" aria-label="Swipe left">&#8592;</button>
+
+    <!-- Movie card container -->
+    <section class="movie-card">
+      <div class="poster-placeholder">Poster</div>
+      <h2 class="movie-title">Movie / Show Title</h2>
+      <p class="movie-description">
+        Short description of the movie or show goes here. A sentence or two
+        summarizing the plot for the user.
+      </p>
+      <p class="movie-rating">Rating: &#9733; 4.2</p>
+      <p class="movie-services">Available on: Netflix, Hulu, Max</p>
+    </section>
+
+    <!-- Small right swipe button -->
+    <button class="swipe-btn swipe-right" aria-label="Swipe right">&#8594;</button>
+
+  </main>
+
+  <!-- ACTION BUTTONS ROW -->
+  <div class="action-buttons">
+    <button class="action-btn btn-pass" aria-label="Pass">X</button>
+    <button class="action-btn btn-shuffle" aria-label="Random pick">&#8635;</button>
+    <button class="action-btn btn-watchlater" aria-label="Watch later">&#128278;</button>
+    <button class="action-btn btn-like" aria-label="Like">&#10084;</button>
+  </div>
+
+</body>
+</html>

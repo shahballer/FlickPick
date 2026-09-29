@@ -1,0 +1,129 @@
+/* ---- Basic reset ---- */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  background-color: #fafafa;
+  color: #333;
+}
+
+/* ---- Nav bar ---- */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 24px;
+  border-bottom: 2px solid #eee;
+}
+
+.nav-left {
+  display: flex;
+  gap: 20px;
+}
+
+.nav-left a {
+  text-decoration: none;
+  color: #333;
+}
+
+.logo {
+  font-size: 1.3em;
+  font-weight: bold;
+  color: #ff6f61; /* light red/orange accent */
+}
+
+/* ---- Swipe area layout ---- */
+.swipe-area {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  margin-top: 60px;
+}
+
+/* Small swipe buttons on either side of the card */
+.swipe-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid #ccc;
+  background-color: #fff;
+  font-size: 1em;
+  cursor: pointer;
+}
+
+/* ---- Movie card ---- */
+.movie-card {
+  width: 280px;
+  min-height: 380px;
+  border: 2px solid #4caf50; /* green accent */
+  border-radius: 16px;
+  padding: 16px;
+  text-align: center;
+  background-color: #fff;
+}
+
+.poster-placeholder {
+  width: 100%;
+  height: 180px;
+  background-color: #ffe0b2; /* light orange placeholder */
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #a15c00;
+  margin-bottom: 12px;
+}
+
+.movie-title {
+  margin: 8px 0 4px;
+  font-size: 1.1em;
+}
+
+.movie-description {
+  font-size: 0.85em;
+  color: #555;
+}
+
+.movie-rating,
+.movie-services {
+  font-size: 0.85em;
+  margin: 4px 0;
+}
+
+/* ---- Action buttons row ---- */
+.action-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.action-btn {
+  min-width: 60px;
+  padding: 10px 16px;
+  border-radius: 12px; /* rounded rectangle */
+  border: none;
+  font-size: 1.1em;
+  cursor: pointer;
+  color: #fff;
+}
+
+.btn-pass {
+  background-color: #ff6f61; /* light red */
+}
+
+.btn-shuffle {
+  background-color: #ffa726; /* orange */
+}
+
+.btn-watchlater {
+  background-color: #66bb6a; /* green */
+}
+
+.btn-like {
+  background-color: #ef5350; /* light red, slightly deeper for contrast */
+}
