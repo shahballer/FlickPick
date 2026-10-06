@@ -5,7 +5,7 @@ FlickPick will be a web application users can access to browse movies or TV show
 
 ## Steps to get the database working:
 
-1. Open MAMP and select preferences->ports-> and select the "MAMP default" button to reset the ports back to MAMP defaults
+1. Open MAMP and select preferences->ports-> and select the "MAMP default" button to reset the ports back to MAMP defaults. Then start MAMP "Start Servers"
 2. Visit the webpage: http://localhost:8888/phpMyAdmin5/index.php?route=/database/structure&server=1&db=flick_pick this takes a moment to load
 3. find the "import" option at the top of the page 
 4. click the "choose file" button and import the "MAMP MySQL.sql" file
