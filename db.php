@@ -6,7 +6,7 @@ ini_set('display_errors', 1);
 $host = "localhost";
 $dbname = "Flick_Pick";
 $username = "root";
-$password = "FlickPick_DB_2026!Movie$42";
+$password = "root";
 $port = 8889;
 
 $conn = new mysqli($host, $username, $password, $dbname, $port);
