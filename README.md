@@ -43,3 +43,36 @@ Mac users:
 curl.cainfo = "/Applications/MAMP/config/cacert.pem"
 openssl.cafile = "/Applications/MAMP/config/cacert.pem"
 ```
+
+## Frontend movie queue
+
+Movie data is available as JSON without exposing the TMDB token to the
+frontend:
+
+```
+http://localhost/FlickPick/index.php?format=json&limit=20
+```
+
+`limit` is optional and is capped at 20. The response contains an ordered
+`movies` array. Each item includes the fields needed for a movie card:
+
+- `id`, `title`, `original_title`
+- `overview`, `release_date`
+- `poster_url`, `backdrop_url`
+- `vote_average`, `vote_count`, `popularity`
+- `genre_ids`, `original_language`, `adult`
+
+The frontend can keep the response in memory and use an index for swiping:
+
+```js
+const response = await fetch('/FlickPick/index.php?format=json&limit=20');
+const { movies } = await response.json();
+let currentIndex = 0;
+
+const currentMovie = movies[currentIndex];
+const nextMovie = () => movies[++currentIndex] ?? null;
+```
+
+The API is stateless: a swipe is handled by the frontend, and the next movie
+is read from the already-loaded queue. TMDB `genre_ids` can be mapped to names
+with TMDB's genre list if genre labels are needed.
