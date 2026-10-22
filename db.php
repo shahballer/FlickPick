@@ -1,43 +1,34 @@
+
 <?php
 
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
-
+// Database connection settings for MAMP.
 $host = "localhost";
 $dbname = "Flick_Pick";
 $username = "root";
 $password = "root";
 $port = 8889;
 
-$conn = new mysqli($host, $username, $password, $dbname, $port);
+// Connect to MySQL.
+mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 
-if ($conn->connect_error) {
-    die("Database connection failed: " . $conn->connect_error);
+try {
+    $conn = new mysqli(
+        $host,
+        $username,
+        $password,
+        $dbname,
+        $port
+    );
+
+    // Use UTF-8 for database communication.
+    $conn->set_charset("utf8mb4");
+
+} catch (mysqli_sql_exception $e) {
+    // Log the technical error without exposing credentials.
+    error_log($e->getMessage());
+    http_response_code(500);
+    exit("Database connection failed. Check your MAMP settings.");
 }
 
-echo "Database connected successfully!<br><br>";
-
-$user_id = 2;
-
-$sql = "SELECT * FROM watchlist WHERE user_id = $user_id";
-
-$result = $conn->query($sql);
-
-if ($result->num_rows > 0) {
-
-    while ($row = $result->fetch_assoc()) {
-
-        echo "TMDB ID: " . $row["tmdb_id"] . "<br>";
-        echo "Saved: " . $row["saved_at"] . "<br>";
-        echo "<hr>";
-    }
-
-} else {
-    echo "This user has no saved movies.";
-}
-
-$conn->close();
-
-?>
 
 
