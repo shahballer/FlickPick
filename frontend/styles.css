@@ -1,0 +1,172 @@
+/* ---- Basic reset ---- */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Poppins", "Segoe UI", Arial, Helvetica, sans-serif; /* classic, simple sans per UI spec */
+  background-color: #ffffff; /* base: white */
+  color: #333;
+}
+
+/* ---- Nav bar ---- */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 24px;
+  border-bottom: 2px solid #eee;
+}
+
+.nav-left {
+  display: flex;
+  gap: 20px;
+}
+
+.nav-left a {
+  text-decoration: none;
+  color: #333;
+}
+
+.logo {
+  font-size: 1.3em;
+  font-weight: bold;
+  color: #3b6ea5; /* main accent: blue */
+}
+
+/* ---- Swipe area layout ---- */
+.swipe-area {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  margin-top: 60px;
+}
+
+/* Small swipe buttons on either side of the card */
+.swipe-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: none;
+  background-color: #f7f6f2; /* off-white per UI spec */
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12); /* some shadow per UI spec */
+  color: #3b6ea5; /* letters: blue */
+  font-size: 1em;
+  cursor: pointer;
+}
+
+/* ---- Movie card ---- */
+.movie-card {
+  width: 280px;
+  min-height: 380px;
+  border: 2px solid #3b6ea5; /* main accent: blue (was green) */
+  border-radius: 16px;
+  padding: 16px;
+  text-align: center;
+  background-color: #fff;
+}
+
+.poster-placeholder {
+  width: 100%;
+  height: 180px;
+  background-color: #e8f0f9; /* light blue placeholder (was light orange) */
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #3b6ea5;
+  margin-bottom: 12px;
+}
+
+.movie-title {
+  margin: 8px 0 4px;
+  font-size: 1.1em;
+}
+
+.movie-description {
+  font-size: 0.85em;
+  color: #555;
+}
+
+.movie-rating {
+  font-size: 0.85em;
+  margin: 4px 0;
+  color: #6fa98c; /* minor accent: green -- UNDER DISCUSSION, confirm with team */
+}
+
+.movie-services {
+  font-size: 0.85em;
+  margin: 4px 0;
+  color: #555;
+}
+
+/* ---- Action buttons row ---- */
+/* Per confirmed UI spec: buttons use off-white background, soft shadow, blue letters.
+   Swapped from solid red/orange/green fills to match this + the wireframe's
+   circular icon-button style (undo / reject / watch-later / like). */
+.action-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.action-btn {
+  min-width: 60px;
+  padding: 10px 16px;
+  border-radius: 999px; /* pill shape, consistent with swipe-btn circles */
+  border: none;
+  background-color: #f7f6f2; /* off-white per UI spec */
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12); /* some shadow per UI spec */
+  font-size: 1.1em;
+  cursor: pointer;
+  color: #3b6ea5; /* letters: blue, default */
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.action-btn:hover {
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.16);
+  transform: translateY(-1px);
+}
+
+/* Pass (X) keeps a distinct color for quick recognition, kept muted/cool rather than bright red */
+.btn-pass {
+  color: #c0453f;
+}
+
+.btn-shuffle {
+  color: #3b6ea5; /* main accent: blue */
+}
+
+/* Watch later -- minor accent, UNDER DISCUSSION, confirm with team */
+.btn-watchlater {
+  color: #9b8cc2; /* purple */
+}
+
+.btn-like {
+  color: #3b6ea5; /* main accent: blue */
+}
+
+/*poster img that shows once loaded */
+.poster {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 12px;
+}
+
+/*makes it stay hidden*/
+[hidden] {
+  display: none !important;
+}
+
+#status-message {
+  text-align: center;
+  margin-top: 16px;
+  color:#555
+}
