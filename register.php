@@ -1,4 +1,10 @@
 <?php
+// messages are stored in $successMessage and $errorMessage to stop break in styling
+
+$errorMessage = null;
+$successMessage = null;
+
+session_start();
 
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
@@ -56,7 +62,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             echo "Profile created successfully!";
 
         } else {
-
+            
             echo "Account created, but profile creation failed: "
                  . $profileStmt->error;
 
@@ -76,36 +82,61 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 ?>
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Flick Pick - Register</title>
+    <link rel="stylesheet" href="frontend/styles.css"> 
+    <link rel="stylesheet" href="frontend/signIn.css">
 </head>
 
-<body>
+    <body>
+        <?php include __DIR__ . '/partials/nav.php'; ?>
 
-<h1>Create a Flick Pick Account</h1>
+        <main class="auth-page">
+            <section class="auth-card">
+                <h1>Create a Flick Pick Account</h1>
 
-<form method="POST" action="register.php">
+                <?php if ($successMessage !== null): ?>
+                    <p class="message message-success" role="status">
+                        <?= htmlspecialchars($successMessage, ENT_QUOTES, 'UTF-8') ?>
+                    </p>
+                    <a class="btn-primary" href="signIn.php">Go to Sign In</a>
+                <?php else: ?>
+                    <p class="auth-subtitle">Pick movies faster and save your favorites.</p>
+                    <?php if ($errorMessage !== null): ?>
+                        <p class="message message-error" role="alert">
+                            <?=htmlspecialchars($errorMessage, ENT_QUOTES, 'UTF-8') ?>
+                        </p>
+                    <?php endif; ?>
 
-    <label>Username:</label>
-    <input type="text" name="username" required>
 
-    <br><br>
+                    <form action="register.php" method="POST" class="auth-form">
+                        <div class="field">
+                            <label for="username">Username:</label>
+                            <!-- maxlength -->
+                            <input type="text" id="username" name="username" maxlength="50"
+                                autocomplete="username" required autofocus
+                                value="<?= htmlspecialchars($_POST['username'] ?? '', ENT_QUOTES, 'UTF-8') ?>">
+                        </div>
+                        <div class="field">
+                            <label for="email">Email:</label>
+                            <input type="email" id="email" name="email" maxlength="100" autocomplete="email" required
+                                value="<?= htmlspecialchars($_POST['email'] ?? '', ENT_QUOTES, 'UTF-8') ?>">
+                        </div>
+                        <div class="field">
+                            <label for="password">Password:</label>
+                            <input type="password" id="password" name="password" autocomplete="new-password" required>
+                        </div>
+            
+                        <button type="submit" class="btn-primary">Create Account</button>
+                    </form>
 
-    <label>Email:</label>
-    <input type="email" name="email" required>
-
-    <br><br>
-
-    <label>Password:</label>
-    <input type="password" name="password" required>
-
-    <br><br>
-
-    <button type="submit">Create Account</button>
-
-</form>
-
-</body>
+                    <p class="auth-switch">Already have an account? <a href="signIn.php">Sign In</a></p>
+                <?php endif; ?>
+            </section>
+        </main>
+    </body>
 </html>
 
