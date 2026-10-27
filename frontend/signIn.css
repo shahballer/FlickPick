@@ -1,0 +1,118 @@
+/*styles for signin & create acc pgs */
+
+:root {
+  --auth-accent: #3b6ea5;        /* main button and link color */
+  --auth-accent-dark: #2d5686;   /* hover button */
+  --auth-border: #d5dbe3;
+  --auth-error-bg: #fdecea;
+  --auth-error-text: #b3261e;
+  --auth-success-bg: #e8f5e9;
+  --auth-success-text: #2e7d32;
+}
+
+/*center card */
+.auth-page {
+    display: flex;
+    justify-content: center;
+    padding: 48px 16px;
+}
+
+.auth-card {
+    width: 100%;
+    max-width: 400px;
+    padding: 32px 28px;
+    background-color: #fff;
+    border: 1px solid #e3e8ef;
+    border-radius: 16px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+}
+
+.auth-card h1 {
+    margin: 0 0 4px;
+    font-size: 1.5em;
+}
+.auth-subtitle {
+    margin: 0 0 20px;
+    color: #666;
+    font-size: 0.9em;
+}
+
+/*error & success msgs */
+.message {
+    margin: 12px 0 16px;
+    padding: 10px 12px;
+    border-radius: 8px;
+    font-size: 0.9em;
+}
+
+.message-error {
+    background-color: var(--auth-error-bg);
+    color: var(--auth-error-text);
+}
+
+.message-success {
+    background-color: var(--auth-success-bg);
+    color: var(--auth-success-text);
+}
+
+/*form fields */
+.field {
+    margin-bottom: 16px;
+}
+
+.field label {
+    display: block;
+    margin-bottom: 6px; 
+    font-weight: bold;
+    font-size: 0.9em;
+}
+
+.field input:focus-visible,
+.btn-primary:focus-visible,
+.auth-card a:focus-visible {
+    outline: 3px solid var(--auth-accent);
+    outline-offset: 2px;
+}
+
+.btn-primary {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    font-size: 1em;
+    color: #fff;
+    background-color: var(--auth-accent);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.btn-primary:hover {
+    background-color: var(--auth-accent-dark);
+}
+
+/* link that looks like btn for acc created screen */
+.auth-card a.btn-primary {
+    color: #fff;
+    text-align: center;
+    text-decoration: none;
+}
+
+.auth-switch {
+    margin: 20px 0 0;
+    text-align: center;
+    font-size: 0.9em;
+    color: #555;
+}
+
+.auth-card a {
+    color: var(--auth-accent);
+}
+
+@media (max-width: 480px) {
+    .auth-page {
+        padding: 24px 12px;
+    }
+    .auth-card {
+        padding: 24px 18px;
+    }
+}

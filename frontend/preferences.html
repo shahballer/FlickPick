@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Preferences</title>
+    <link rel="stylesheet" href="wireframe.css">
+
+</head>
+
+<body>
+
+    <header class="navbar">
+        <nav class="nav-left" aria-label="Main">
+            <a href="landing.html">Login</a>
+            <a href="#">Random</a>
+            <a href="watch-later.html">Watch Later</a>
+            <a href="preferences.html" aria-current="page">Profile</a>
+        </nav>
+        <a class="logo" href="index.html">FlickPick</a>
+    </header>
+
+    <main class="page">
+        <h1>What are you into?</h1>
+
+        <div class="state">
+        <form onsubmit="return false">
+        <fieldset>
+            <legend>Genres</legend>
+            <div class="chips">
+                <label class="chip"><input type="checkbox"> Action</label>
+                <label class="chip"><input type="checkbox" checked> Comedy</label>
+                <label class="chip"><input type="checkbox" checked> Drama</label>
+                <label class="chip"><input type="checkbox"> Horror</label>
+                <label class="chip"><input type="checkbox"> Romance</label>
+                <label class="chip"><input type="checkbox"> Sci Fi</label>
+                <label class="chip"><input type="checkbox"> Documentary</label>
+                <label class="chip"><input type="checkbox"> Animation</label>
+            </div>
+        </fieldset>
+
+        <fieldset>
+            <legend>Streaming services</legend>
+                <div class="chips">
+                    <label class="tile"><input type="checkbox" checked> Netflix</label>
+                    <label class="tile"><input type="checkbox" checked> Hulu</label>
+                    <label class="tile"><input type="checkbox"> Max</label>
+                    <label class="tile"><input type="checkbox"> Disney+</label>
+                    <label class="tile"><input type="checkbox"> Prime Video</label>
+                    <label class="tile"><input type="checkbox"> Apple TV+</label>
+                    <label class="tile"><input type="checkbox"> Peacock</label>
+                    <label class="tile"><input type="checkbox"> Paramount+</label>
+                </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Minimum rating</legend>
+          <div class="chips">
+            <label class="chip"><input type="radio" name="min-rating-a" checked> Any</label>
+            <label class="chip"><input type="radio" name="min-rating-a"> &#9733; 2+</label>
+            <label class="chip"><input type="radio" name="min-rating-a"> &#9733; 3+</label>
+            <label class="chip"><input type="radio" name="min-rating-a"> &#9733; 4+</label>
+          </div>
+        </fieldset>
+      <button class="btn btn-primary" type="submit">Next</button>
+    </form>
+  </div>
+  
+  <!--error screen, real-world, JS would change the state -->
+  <div class="state">
+    <h2>Error (nothing chosen)</h2>
+    <form onsubmit="return false">
+      <p class="message-error" role="alert">Please choose at least one genre and one streaming service.</p>
+      <fieldset class="has-error">
+        <legend>Genres</legend>
+        <div class="chips">
+          <label class="chip"><input type="checkbox"> Action</label>
+          <label class="chip"><input type="checkbox"> Comedy</label>
+          <label class="chip"><input type="checkbox"> Drama</label>
+          <label class="chip"><input type="checkbox"> Horror</label>
+          <label class="chip"><input type="checkbox"> Romance</label>
+          <label class="chip"><input type="checkbox"> Sci Fi</label>
+          <label class="chip"><input type="checkbox"> Documentary</label>
+          <label class="chip"><input type="checkbox"> Animation</label>
+        </div>
+      </fieldset>
+
+      <fieldset class="has-error">
+        <legend>Streaming services</legend>
+        <div class="chips">
+          <label class="tile"><input type="checkbox"> Netflix</label>
+          <label class="tile"><input type="checkbox"> Hulu</label>
+          <label class="tile"><input type="checkbox"> Max</label>
+          <label class="tile"><input type="checkbox"> Disney+</label>
+          <label class="tile"><input type="checkbox"> Prime Video</label>
+          <label class="tile"><input type="checkbox"> Apple TV+</label>
+          <label class="tile"><input type="checkbox"> Peacock</label>
+          <label class="tile"><input type="checkbox"> Paramount+</label>
+        </div>
+      </fieldset>
+      
+        <fieldset>
+          <legend>Minimum rating</legend>
+          <div class="chips">
+            <label class="chip"><input type="radio" name="min-rating-b" checked> Any</label>
+            <label class="chip"><input type="radio" name="min-rating-b"> &#9733; 2+</label>
+            <label class="chip"><input type="radio" name="min-rating-b"> &#9733; 3+</label>
+            <label class="chip"><input type="radio" name="min-rating-b"> &#9733; 4+</label>
+          </div>
+        </fieldset>
+      <button class="btn btn-primary" type="submit">Next</button>
+    </form>
+  </div>
+    </main>
+</body>
+</html>
