@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Rate a title - FlickPick wireframe</title>
+        <link rel="stylesheet" href="wireframe.css">
+    </head> 
+
+    <body> 
+        <header class="navbar">
+            <nav class="nav-left" aria-label="Main">
+                <a href="landing.html">Login</a>
+                <a href="#">Random</a>
+                <a href="watch-later.html">Watch Later</a>
+                <a href="preferences.html">Profile</a>
+            </nav>
+            <a class="logo" href="index.html">FlickPick</a>
+        </header>
+
+        <main class="page">
+            <h1>My Watch Later</h1>
+            <div class="grid">
+                <article class="card"><div class="ph poster-ph">Poster</div><h3>Movie Title</h3></article>
+                <article class="card"><div class="ph poster-ph">Poster</div><h3>Movie Title</h3></article>
+                <article class="card"><div class="ph poster-ph">Poster</div><h3>Movie Title</h3></article>
+                <article class="card"><div class="ph poster-ph">Poster</div><h3>Movie Title</h3></article>
+            </div>
+            
+        </main>
+
+        <div class="overlay" aria-hidden="true"></div>
+
+        <div class="dialog" role="dialog" aria-modal="true" aria-labelledby="rate-title">
+            <div class="ph poster-ph">Poster</div>
+            <h2 id="rate-title">How was Movie Title?</h2>
+            <span class="stars" role="img" aria-label="3 out of 5 stars">&#9733;&#9733;&#9733;&#9734;&#9734;</span>
+            <p class="subtle">Tap a star to rate</p>
+            <div class="panel-actions">
+                <a class="btn" href="watch-later.html">Cancel</a>
+                <a class="btn btn-primary" href="watch-later.html">Save rating</a>
+            </div>
+</div>
+    </body>
+</html>
