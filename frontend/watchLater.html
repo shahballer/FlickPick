@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Watch Later</title>
+    <link rel="stylesheet" href="wireframe.css">
+</head>
+<body>
+    <header class="navbar">
+        <nav class="nav-left" aria-label="Main">
+            <a href="landing.html">Login</a>
+            <a href="#">Random</a>
+            <a href="watch-later.html" aria-current="page">Watch Later</a>
+            <a href="preferences.html">Profile</a>
+        </nav>
+        <a class="logo" href="index.html">FlickPick</a>
+    </header>
+
+    <main class="page">
+        <div class="page-head">
+            <h1>My Watch Later</h1>
+            <span class="subtle">12 saved &middot; 3 watched</span>
+        </div>
+
+        <div class="toolbar">
+            <div class="segmented" role="group" aria-label="Show">
+                <button type="button" aria-pressed="true">To watch</button>
+                <button type="button" aria-pressed="false">Watched</button>
+                <button type="button" aria-pressed="false">All</button>
+            </div>
+            <div class="segmented" role="group" aria-label="Sort by">
+                <button type="button" aria-pressed="true">Popular</button>
+                <button type="button" aria-pressed="false">Oldest</button>
+            </div>
+        </div>
+
+        <div class="state">
+           <!--movies will be pulled from tmdb -->
+            <div class="grid">
+                
+                <article class="card"><div class="ph poster-ph">Poster</div><h3>Movie Title</h3><p class="meta">&#9733; 7.2 &middot; 2023</p>
+                    <div class="actions"><button class="btn btn-small" type="button">Mark watched</button><button class="btn btn-small" type="button">Remove</button></div></article>
+                <article class="card"><div class="ph poster-ph">Poster</div><h3>Movie Title</h3><p class="meta">&#9733; 8.1 &middot; 2021</p>
+                    <div class="actions"><button class="btn btn-small" type="button">Mark watched</button><button class="btn btn-small" type="button">Remove</button></div></article>
+                <article class="card"><span class="badge">&#10003; Watched</span><div class="ph poster-ph">Poster</div><h3>Movie Title</h3>
+                    <p class="meta">Your rating <span class="stars" role="img" aria-label="4 out of 5 stars">&#9733;&#9733;&#9733;&#9733;&#9734;</span></p>
+                    <div class="actions"><a class="btn btn-small" href="rate.html">Change rating</a></div></article>
+                <article class="card"><span class="badge">&#10003; Watched</span><div class="ph poster-ph">Poster</div><h3>Movie Title</h3>
+                    <p class="meta">Not rated yet</p>
+                    <div class="actions"><a class="btn btn-small btn-primary" href="rate.html">Rate it</a></div></article>
+                <article class="card"><div class="ph poster-ph">Poster</div><h3>Movie Title</h3><p class="meta">&#9733; 6.4 &middot; 2020</p>
+                    <div class="actions"><button class="btn btn-small" type="button">Mark watched</button><button class="btn btn-small" type="button">Remove</button></div></article>
+                <article class="card"><div class="ph poster-ph">Poster</div><h3>Movie Title</h3><p class="meta">&#9733; 7.5 &middot; 2019</p>
+                    <div class="actions"><button class="btn btn-small" type="button">Mark watched</button><button class="btn btn-small" type="button">Remove</button></div></article>
+            </div>
+        </div>
+
+        <!--JS will be used to change state based on whether there are saved movies-->
+        <div class="state">
+            <h2>State 2 &middot; nothing saved yet</h2>
+            <div class="empty">
+                <p>Nothing saved yet. Swipe right on a movie to save it here.</p>
+                <a class="btn btn-primary" href="#">Start swiping</a>
+            </div>
+        </div>
+
+    </main>
+
+   
+</body>
+</html>
