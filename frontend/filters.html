@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Filters</title>
+    <link rel="stylesheet" href="wireframe.css">
+
+</head>
+<body>
+    <header class="navbar">
+        <nav class="nav-left" aria-label="Main">
+            <a href="landing.html">Home</a>
+            <a href="#">Random</a>
+            <a href="watch-later.html">Watch Later</a>
+            <a href="preferences.html">Profile</a>
+        </nav>
+    </header>
+    <main class="page">
+        <h1>Swipe screen</h1>
+        <div class="backdrop-card">
+            <div class="ph poster-ph">Poster</div>
+            <h2>Movie Title</h2>
+            <p class="subtle">Short description of the movie.</p>
+        </div>
+    </main>
+    <div class="overlay" aria-hidden="true"></div>
+    <aside class="panel" role="dialog" aria-modal="true" aria-labelledby="filters-title">
+  <div class="panel-head">
+    <h2 id="filters-title">Filters</h2>
+    <button class="btn btn-small" type="button" aria-label="Close filters">&times;</button>
+  </div>
+
+  <fieldset>
+    <legend>Show me</legend>
+    <div class="chips">
+      <label class="chip"><input type="radio" name="type" checked> Movies</label>
+      <label class="chip"><input type="radio" name="type"> TV shows</label>
+      <label class="chip"><input type="radio" name="type"> Both</label>
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <legend>Episode length <span class="subtle">(TV shows only)</span></legend>
+    <div class="chips">
+      <label class="chip"><input type="radio" name="length" checked> Any</label>
+      <label class="chip"><input type="radio" name="length"> About 25 min</label>
+      <label class="chip"><input type="radio" name="length"> About 1 hour</label>
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <legend>Genres</legend>
+    <div class="chips">
+          <label class="chip"><input type="checkbox"> Action</label>
+          <label class="chip"><input type="checkbox" checked> Comedy</label>
+          <label class="chip"><input type="checkbox"> Drama</label>
+          <label class="chip"><input type="checkbox"> Horror</label>
+          <label class="chip"><input type="checkbox"> Romance</label>
+          <label class="chip"><input type="checkbox"> Sci-Fi</label>
+    </div>
+  </fieldset>
+
+   <fieldset>
+    <!--drop down or stars? sliders?-->
+    <legend><label for="min-rating">Minimum rating</label></legend>
+    <select id="min-rating">
+      <option>Any</option><option>&#9733; 2+</option><option>&#9733; 3+</option><option selected>&#9733; 4+</option>
+    </select>
+  </fieldset>
+
+   <div class="panel-actions">
+    <button class="btn" type="button">Reset</button>
+    <button class="btn btn-primary" type="button">Apply</button>
+  </div>
+
+</aside>
+</body>
+</html>
