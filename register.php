@@ -23,11 +23,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } elseif (strlen($password) < 12) {
         $errorMessage = 'Password must be at least 12 characters long.';
     } else {
-        // Never store the original password.
+        
         $passwordHash = password_hash($password, PASSWORD_DEFAULT);
 
         try {
-            // If profile creation fails, undo the account creation too.
+           
             $conn->begin_transaction();
 
             $stmt = $conn->prepare(
@@ -94,3 +94,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <div class="field">
                         <label for="username">Username:</label>
                         <input type="text" id="username" name="username" maxlength="50"
+
+                        autocomplete="username" required autofocus
+                               value="<?= htmlspecialchars($_POST['username'] ?? '', ENT_QUOTES, 'UTF-8') ?>">
+                    </div>
+                    <div class="field">
+                        <label for="email">Email:</label>
+                        <input type="email" id="email" name="email" maxlength="100"
+                               autocomplete="email" required
+                               value="<?= htmlspecialchars($_POST['email'] ?? '', ENT_QUOTES, 'UTF-8') ?>">
+                    </div>
+                    <div class="field">
+                        <label for="password">Password:</label>
+                        <input type="password" id="password" name="password"
+                               minlength="12" autocomplete="new-password" required>
+                    </div>
+                    <button type="submit" class="btn-primary">Create Account</button>
+                </form>
+
+                <p class="auth-switch">Already have an account? <a href="signIn.php">Sign In</a></p>
+            <?php endif; ?>
+        </section>
+    </main>
+</body>
+</html>
+<?php
+$conn->close();
