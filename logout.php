@@ -1,7 +1,23 @@
 <?php
-// will end the session. *tanner building real one*/
 session_start();
-$_SESSION = []; //forget user info
-session_destroy(); //end session
-header("Location: frontend/index.php");
+
+$_SESSION = [];
+
+if (ini_get('session.use_cookies')) {
+    $params = session_get_cookie_params();
+
+    setcookie(
+        session_name(),
+        '',
+        time() - 42000,
+        $params['path'],
+        $params['domain'],
+        $params['secure'],
+        $params['httponly']
+    );
+}
+
+session_destroy();
+
+header('Location: signIn.php');
 exit;
