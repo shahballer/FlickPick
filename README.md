@@ -55,8 +55,9 @@ openssl.cafile = "/Applications/MAMP/config/cacert.pem"
 
 ## Frontend movie queue
 
-Movie data is available as JSON without exposing the TMDB token to the
-frontend:
+[`index.php`](./index.php) is the JSON-only API endpoint. The stylized movie
+page is [`frontend/index.php`](./frontend/index.php), which loads movie data
+without exposing the TMDB token to the frontend:
 
 ```
 http://localhost/FlickPick/index.php?format=json&limit=20
