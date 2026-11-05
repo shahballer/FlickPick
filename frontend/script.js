@@ -1,6 +1,6 @@
 
 //movie data
-const API_URL = 'http://localhost:8888/FlickPick/index.php?format=json';
+const API_URL = 'http://localhost:8888/FlickPick/callAPI.php?format=json';
 
 //drag 100 px to count as swipe
 const Swipe_Threshold = 100;
