@@ -72,6 +72,13 @@ http://localhost/FlickPick/callAPI.php?format=json&limit=20
 - `vote_average`, `vote_count`, `popularity`
 - `genre_ids`, `original_language`, `adult`
 
+The API also contains reusable PHP functions for future preference-based
+requests. `fetchTrendingMovies()` supports a `day` or `week` time window,
+`fetchDiscoverMovies()` supports genres, sorting, year, language, rating, and
+runtime filters, and `fetchMovies()` selects between the trending and discover
+sources. The endpoint currently calls `fetchMovies()` with its default trending
+options so the existing frontend remains unchanged.
+
 The frontend can keep the response in memory and use an index for swiping:
 
 ```js
