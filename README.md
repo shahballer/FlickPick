@@ -55,11 +55,12 @@ openssl.cafile = "/Applications/MAMP/config/cacert.pem"
 
 ## Frontend movie queue
 
-Movie data is available as JSON without exposing the TMDB token to the
-frontend:
+[`callAPI.php`](./callAPI.php) is the JSON-only API endpoint. The stylized movie
+page is [`frontend/index.php`](./frontend/index.php), which loads movie data
+without exposing the TMDB token to the frontend:
 
 ```
-http://localhost/FlickPick/index.php?format=json&limit=20
+http://localhost/FlickPick/callAPI.php?format=json&limit=20
 ```
 
 `limit` is optional and is capped at 20. The response contains an ordered
@@ -71,10 +72,17 @@ http://localhost/FlickPick/index.php?format=json&limit=20
 - `vote_average`, `vote_count`, `popularity`
 - `genre_ids`, `original_language`, `adult`
 
+The API also contains reusable PHP functions for future preference-based
+requests. `fetchTrendingMovies()` supports a `day` or `week` time window,
+`fetchDiscoverMovies()` supports genres, sorting, year, language, rating, and
+runtime filters, and `fetchMovies()` selects between the trending and discover
+sources. The endpoint currently calls `fetchMovies()` with its default trending
+options so the existing frontend remains unchanged.
+
 The frontend can keep the response in memory and use an index for swiping:
 
 ```js
-const response = await fetch('/FlickPick/index.php?format=json&limit=20');
+const response = await fetch('/FlickPick/callAPI.php?format=json&limit=20');
 const { movies } = await response.json();
 let currentIndex = 0;
 
