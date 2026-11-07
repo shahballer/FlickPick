@@ -1,33 +1,60 @@
+
 <?php
 
-// Start the session so the signed-in username can be used on later pages.
 session_start();
 
-// This is displayed when the submitted form is missing required values.
-$error = null;
+require_once __DIR__ . '/db.php';
 
-// After the prototype sign-in succeeds, send the user back to the movie page.
-//changed it to the frontend index page
+$error = null;
 $redirectTarget = 'frontend/index.php';
 
-// Only process credentials when the form has been submitted.
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Read and clean the submitted form values.
+
     $username = trim($_POST['username'] ?? '');
     $password = $_POST['password'] ?? '';
 
-    // The prototype only checks that both fields contain a value.
     if ($username === '' || $password === '') {
+
         $error = 'Enter both a username and password.';
+
     } else {
-        // Prototype authentication: replace with database/password verification later.
-        // The password is not stored; a real app should verify it securely.
-        $_SESSION['username'] = $username;
-        header('Location: ' . $redirectTarget);
-        exit;
+
+        // Find the user in the database
+        $stmt = $conn->prepare(
+            'SELECT user_id, password_hash
+             FROM users
+             WHERE username = ?'
+        );
+
+        $stmt->bind_param('s', $username);
+        $stmt->execute();
+
+        $result = $stmt->get_result();
+        $user = $result->fetch_assoc();
+
+        $stmt->close();
+
+        // Verify the submitted password
+        if ($user && password_verify($password, $user['password_hash'])) {
+
+            session_regenerate_id(true);
+
+            // Store the actual database user ID in the session
+            $_SESSION['user_id'] = (int) $user['user_id'];
+            $_SESSION['username'] = $username;
+
+            header('Location: ' . $redirectTarget);
+            exit;
+
+        } else {
+
+            $error = 'Incorrect username or password.';
+
+        }
     }
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
