@@ -2,6 +2,9 @@
 //movie data
 const API_URL = 'http://localhost:8888/FlickPick/callAPI.php?format=json';
 
+// PHP endpoint for saving movies to the user's watchlist
+const WATCHLIST_URL = 'http://localhost:8888/FlickPick/saveToWatchlist.php';
+
 //drag 100 px to count as swipe
 const Swipe_Threshold = 100;
 
@@ -21,6 +24,42 @@ let currentIndex = 0;
 const watchLater = []; 
 //skipped (swipe L)
 const skipped = [];
+
+
+// Save a movie to the logged-in user's database watchlist
+async function saveMovieToWatchlist(movieId) {
+
+    // Prepare the movie ID to send to PHP
+    const formData = new FormData();
+    formData.append('tmdb_id', movieId);
+
+    try {
+
+        const response = await fetch(WATCHLIST_URL, {
+            method: 'POST',
+            body: formData,
+            credentials: 'same-origin'
+        });
+
+        const result = await response.json();
+        // DEBUG: Display the actual PHP response
+        console.log('PHP response status:', response.status);
+        console.log('PHP response data:', JSON.stringify(result, null, 2));
+        
+        // Check whether PHP successfully saved the movie
+        if (!response.ok || !result.success) {
+            throw new Error(result.message || 'Unable to save movie.');
+        }
+
+        return result.message;
+
+    } catch (error) {
+
+        console.error('Error saving movie:', error);
+
+        throw error;
+    }
+}
 
 //ids of movies user swiped already, liked. Genre id of preferred genres
 const seenIds = new Set();
@@ -152,42 +191,67 @@ function resetCardStyle() {
     stampPassElement.style.opacity = 0;
 }
 
+
 // card dissapears, track what user chose, and next movie
-function swipeCard(direction) {
-    //ignores if no card/card dissapearing 
+async function swipeCard(direction) {
+
+    // Ignore input if there is no active card or animation is running
     if (isAnimating || cardElement.hidden || movies.length === 0) {
         return;
     }
 
     isAnimating = true;
-
     const movie = movies[currentIndex];
-    const sign = direction === 'right' ? 1 : -1; // 1 for right, -1 for left
 
-    // if saved (liked) show the save stamp, otherwise show the pass stamp
+    // SAVE movie to database if user swipes right
+    if (direction === 'right') {
+        try {
+            const saveMessage = await saveMovieToWatchlist(movie.id);
+
+            // Keep local copy updated
+            watchLater.push(movie);
+
+            // Display the message returned by PHP
+            showMessage(saveMessage);
+
+        } catch (error) {
+            console.error('Watchlist error:', error);
+            showMessage(error.message || 'Could not save movie.');
+
+            // Keep movie on screen if saving fails
+            isAnimating = false;
+            snapBack();
+            return;
+        }
+
+    } else {
+
+        // User swiped left
+        skipped.push(movie);
+
+    }
+    const sign = direction === 'right' ? 1 : -1;
+
+    // Display the correct swipe stamp
     if (direction === 'right') {
         stampSaveElement.style.opacity = 1;
     } else {
         stampPassElement.style.opacity = 1;
     }
 
-    //card out of the screen
+    // Animate card off screen
     cardElement.classList.remove('dragging', 'snapping');
     cardElement.classList.add('flying');
-    cardElement.style.transform = 'translateX(' + sign * window.innerWidth +'px) rotate(' + sign * 30 + 'deg)';
+    cardElement.style.transform =
+        'translateX(' + sign * window.innerWidth + 'px) rotate(' + sign * 30 + 'deg)';
 
-    //card has been dragged off, track the user choice
+    // Move to next movie after animation
     setTimeout(function () {
-        if (direction === 'right') {
-            watchLater.push(movie); // FOR LATER: save to watchlist tbl (user_id + tmdb_id)
-        } else {
-            skipped.push(movie); 
-        }
         seenIds.add(movie.id);
-
         resetCardStyle();
         isAnimating = false;
         showNextMovie();
+
     }, prefersReducedMotion ? 0 : fly_ms);
 }
 
