@@ -11,7 +11,13 @@ const Swipe_Threshold = 100;
 //swipe animation in seconds
 const fly_ms = 250;
 
-//reduce animation for users who prefer reduced motion?? 
+//notification timing
+const notification_ms = 3000;
+const fade_ms = 200;
+let notificationTimer;
+let notificationFadeTimer;
+
+//reduce animation for users who prefer reduced motion??
 const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 //movie card stuff ***
@@ -21,10 +27,10 @@ let movies = [];
 let currentIndex = 0;
 
 //saved movies (swipe R)
-const watchLater = []; 
+const watchLater = [];
+
 //skipped (swipe L)
 const skipped = [];
-
 
 // Save a movie to the logged-in user's database watchlist
 async function saveMovieToWatchlist(movieId) {
@@ -42,10 +48,11 @@ async function saveMovieToWatchlist(movieId) {
         });
 
         const result = await response.json();
+
         // DEBUG: Display the actual PHP response
         console.log('PHP response status:', response.status);
         console.log('PHP response data:', JSON.stringify(result, null, 2));
-        
+
         // Check whether PHP successfully saved the movie
         if (!response.ok || !result.success) {
             throw new Error(result.message || 'Unable to save movie.');
@@ -72,7 +79,7 @@ let isAnimating = false;
 let startX = 0;
 let dragX = 0;
 
-// elements on the card 
+// elements on the card
 const cardElement = document.getElementById('movie-card');
 const posterElement = document.getElementById('movie-poster');
 const placeholderElement = document.getElementById('poster-placeholder');
@@ -86,24 +93,57 @@ const stampPassElement = document.getElementById('stamp-pass');
 const likeBtn = document.getElementById('like-btn');
 const modalElement = document.getElementById('preference-modal');
 
-
 //movies shown
-// show error messages? func?
+
+// Display notification underneath the action buttons
 function showMessage(text) {
+
+    // Clear previous notification timers
+    clearTimeout(notificationTimer);
+    clearTimeout(notificationFadeTimer);
+
+    // Remove previous animation classes
+    statusMessageEl.classList.remove('is-fading');
+
+    if (!text) {
+        statusMessageEl.textContent = '';
+        statusMessageEl.classList.remove('is-visible');
+        return;
+    }
+
+    // Display the new notification
     statusMessageEl.textContent = text;
+    statusMessageEl.classList.add('is-visible');
+
+    // Keep notification visible for 5 seconds
+    notificationTimer = setTimeout(function () {
+
+        // Start fading out
+        statusMessageEl.classList.add('is-fading');
+
+        // Remove notification after fade animation
+        notificationFadeTimer = setTimeout(function () {
+            statusMessageEl.classList.remove('is-visible', 'is-fading');
+            statusMessageEl.textContent = '';
+        }, fade_ms);
+
+    }, notification_ms);
 }
 
 //
 async function loadMovies() {
     showMessage('');
+
     //rn it returns the trending list, but if user picked genres...
     try {
-        let url = API_URL; //keep or ..?
+        let url = API_URL;
+
         if (preferredGenres.length > 0) {
             url += '&genres=' + preferredGenres.join(',');
         }
-        
+
         const response = await fetch(url);
+
         if (!response.ok) {
             throw new Error('Server returned ' + response.status);
         }
@@ -111,18 +151,21 @@ async function loadMovies() {
         const data = await response.json();
 
         //discard movies that L swipped
-        movies = data.movies.filter(function (movie){
+        movies = data.movies.filter(function (movie) {
             return !seenIds.has(movie.id);
         });
+
         currentIndex = 0;
-        
+
         if (movies.length === 0) {
             cardElement.hidden = true;
-            if(seenIds.size > 0) {
+
+            if (seenIds.size > 0) {
                 showMessage("You swiped till the end, check your Watch later or update your Preferences");
             } else {
                 showMessage("No movies found. Try updating your Preferences");
             }
+
             return;
         }
 
@@ -168,7 +211,7 @@ function renderCard() {
 
 //next movie
 function showNextMovie() {
-    currentIndex ++;
+    currentIndex++;
 
     if (currentIndex >= movies.length) {
         //end and preferences questions show
@@ -180,7 +223,6 @@ function showNextMovie() {
     renderCard();
 }
 
-
 // the main thing, the swipe feature :(
 
 // card/labels back to normal ig (at the btm of css)
@@ -191,15 +233,13 @@ function resetCardStyle() {
     stampPassElement.style.opacity = 0;
 }
 
-
-// card dissapears, track what user chose, and next movie
+// card disappears, track what user chose, and next movie
 async function swipeCard(direction) {
 
     // Ignore input if there is no active card or animation is running
     if (isAnimating || cardElement.hidden || movies.length === 0) {
         return;
     }
-
     isAnimating = true;
     const movie = movies[currentIndex];
 
@@ -209,26 +249,31 @@ async function swipeCard(direction) {
             const saveMessage = await saveMovieToWatchlist(movie.id);
 
             // Keep local copy updated
-            watchLater.push(movie);
+            if (!watchLater.some(function (savedMovie) {
+                return savedMovie.id === movie.id;
+            })) {
+                watchLater.push(movie);
+            }
 
             // Display the message returned by PHP
             showMessage(saveMessage);
 
         } catch (error) {
             console.error('Watchlist error:', error);
-            showMessage(error.message || 'Could not save movie.');
+            showMessage(error.message || 'Unable to save movie.');
 
             // Keep movie on screen if saving fails
             isAnimating = false;
             snapBack();
             return;
         }
-
     } else {
 
         // User swiped left
         skipped.push(movie);
 
+        // Display ignored notification
+        showMessage('Ignored');
     }
     const sign = direction === 'right' ? 1 : -1;
 
@@ -265,27 +310,29 @@ function snapBack() {
 
 // dragging w/mouse or finger; aka the pointer events yay
 function onPointerDown(event) {
-    if(isAnimating || cardElement.hidden) return;
+    if (isAnimating || cardElement.hidden) return;
+
     //L click only
     if (event.pointerType === 'mouse' && event.button !== 0) return;
 
     isDragging = true;
     startX = event.clientX;
     dragX = 0;
-    
+
     cardElement.classList.remove('snapping');
     cardElement.classList.add('dragging');
 
-    //keep getting pointer events even if it leaves card elem 
+    //keep getting pointer events even if it leaves card elem
     cardElement.setPointerCapture(event.pointerId);
 }
 
 function onPointerMove(event) {
     if (!isDragging) return;
+
     dragX = event.clientX - startX;
 
-    // mv card  and tilt a lil where its dragging
-    const tilt = dragX / 15; 
+    // mv card and tilt a lil where its dragging
+    const tilt = dragX / 15;
     cardElement.style.transform = 'translateX(' + dragX + 'px) rotate(' + tilt + 'deg)';
 
     // fade in label. 0 means invisible, 1 is visible
@@ -296,6 +343,7 @@ function onPointerMove(event) {
 
 function onPointerUp() {
     if (!isDragging) return;
+
     isDragging = false;
     cardElement.classList.remove('dragging');
 
@@ -309,8 +357,9 @@ function onPointerUp() {
 }
 
 // runs when pointerevent is canceled by the browser
-function onPointerCancel () {
+function onPointerCancel() {
     if (!isDragging) return;
+
     isDragging = false;
     cardElement.classList.remove('dragging');
     snapBack();
@@ -327,6 +376,7 @@ cardElement.addEventListener('pointercancel', onPointerCancel);
 document.getElementById('pass-btn').addEventListener('click', function () {
     swipeCard('left');
 });
+
 document.getElementById('swipe-left-btn').addEventListener('click', function () {
     swipeCard('left');
 });
@@ -334,18 +384,20 @@ document.getElementById('swipe-left-btn').addEventListener('click', function () 
 //Watch Later btn (bookmark/ R arrow)
 document.getElementById('watchlater-btn').addEventListener('click', function () {
     swipeCard('right');
-})
+});
+
 document.getElementById('swipe-right-btn').addEventListener('click', function () {
     swipeCard('right');
 });
 
 //keyboard (L arrow to pass/skip/ignore, R arrow to like/save)
 document.addEventListener('keydown', function (event) {
-    if(!modalElement.hidden) return; // don't swipe when pop-up open
+    if (!modalElement.hidden) return;
 
     if (event.key === 'ArrowLeft') {
         swipeCard('left');
     }
+
     if (event.key === 'ArrowRight') {
         swipeCard('right');
     }
@@ -359,27 +411,32 @@ function updateFavoriteButton(movie) {
 }
 
 likeBtn.addEventListener('click', function () {
-    if(cardElement.hidden || movies.length === 0) return;
+    if (cardElement.hidden || movies.length === 0) return;
 
     const movie = movies[currentIndex];
-    if(favoriteIds.has(movie.id)) {
+
+    if (favoriteIds.has(movie.id)) {
         favoriteIds.delete(movie.id);
     } else {
         favoriteIds.add(movie.id); // FOR LATER save favorites to DB
     }
+
     updateFavoriteButton(movie);
 });
 
 //prefrences menu for after they swipped through everything
 function openPreferencesMenu() {
     modalElement.hidden = false;
+
     const firstBox = modalElement.querySelector('input');
+
     if (firstBox) firstBox.focus();
 }
 
 document.getElementById('preference-continue-btn').addEventListener('click', function () {
     //get ids of checked preferences
     const checkedPreferences = modalElement.querySelectorAll('input[name="genre"]:checked');
+
     preferredGenres = Array.from(checkedPreferences).map(function (box) {
         return box.value;
     });
