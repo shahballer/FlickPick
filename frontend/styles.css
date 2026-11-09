@@ -43,8 +43,8 @@ body {
 }
 
 .nav-user {
-  color:#555;
-  font-size: 0.9em; 
+  color: #555;
+  font-size: 0.9em;
 }
 
 a.logo {
@@ -145,7 +145,7 @@ a.logo {
   transform: translateY(-1px);
 }
 
-/* Pass X is cool red */ 
+/* Pass X is cool red */
 .btn-pass {
   color: #c0453f;
 }
@@ -179,15 +179,36 @@ a.logo {
   display: none !important;
 }
 
+/* Watchlist notification */
 #status-message {
+  min-height: 24px;
+  margin: 12px auto 0;
+  padding: 0 12px;
   text-align: center;
-  margin-top: 16px;
-  color:#555
+  color: #555;
+  font-size: 0.9em;
+  font-weight: 600;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.5s ease;
+}
+
+/* Show notification */
+#status-message.is-visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Fade notification away */
+#status-message.is-fading {
+  opacity: 0;
 }
 
 /* swipe stuff */
 
-body { overflow-x: hidden; }
+body {
+  overflow-x: hidden;
+}
 
 .movie-card {
   position: relative;
@@ -197,7 +218,7 @@ body { overflow-x: hidden; }
   cursor: grab;
 }
 
-.movie-card.draggin {
+.movie-card.dragging {
   cursor: grabbing;
 }
 
@@ -211,9 +232,8 @@ body { overflow-x: hidden; }
 
 .stamp {
   position: absolute;
-  top: 16 px;
-  padding: 4px;
-  padding: 4px 10 px;
+  top: 16px;
+  padding: 4px 10px;
   border: 3px solid;
   border-radius: 6px;
   background-color: rgba(255, 255, 255, 0.85);
@@ -230,8 +250,8 @@ body { overflow-x: hidden; }
 }
 
 .stamp-pass {
-  right: 12 px;
-  color: #d84315; 
+  right: 12px;
+  color: #d84315;
   transform: rotate(12deg);
 }
 
@@ -240,7 +260,7 @@ body { overflow-x: hidden; }
   outline: 3px solid #e57373;
   outline-offset: 2px;
   color: #c62828;               /* the heart turns red once liked, isnt that nice */
-  background-color: #ffebee;    /* soft pink fill */ 
+  background-color: #ffebee;    /* soft pink fill */
 }
 
 .modal {
@@ -267,9 +287,9 @@ body { overflow-x: hidden; }
 }
 
 .modal-content button {
-  margin-top: 12 px;
-  padding: 10 px 16 px;
-  border: none; 
+  margin-top: 12px;
+  padding: 10px 16px;
+  border: none;
   border-radius: 8px;
   cursor: pointer;
 }
@@ -277,6 +297,10 @@ body { overflow-x: hidden; }
 @media (prefers-reduced-motion: reduce) {
   .movie-card.flying,
   .movie-card.snapping {
+    transition: none;
+  }
+
+  #status-message {
     transition: none;
   }
 }

@@ -1,3 +1,4 @@
+
 <?php session_start(); ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -22,15 +23,13 @@
       <div id="stamp-save" class="stamp stamp-save">Watch Later</div>
       <div id="stamp-pass" class="stamp stamp-pass">Skip</div>
 
-      <img id="movie-poster" class="poster" alt="" dragable="false"hidden>
+      <img id="movie-poster" class="poster" alt="" draggable="false" hidden>
       <div id="poster-placeholder" class="poster-placeholder">Poster</div>
-      <h2 id="movie-title"class="movie-title">Loading...</h2>
-      <p id="movie-description"class="movie-description"></p>
-      <p class="movie-rating">Rating: <span id ="movie-rating"></span></p>
+      <h2 id="movie-title" class="movie-title">Loading...</h2>
+      <p id="movie-description" class="movie-description"></p>
+      <p class="movie-rating">Rating: <span id="movie-rating"></span></p>
       <p class="movie-services">Available on: <span id="movie-services">Coming Soon</span></p>
     </section>
-
-    <p id="status-message"></p>
 
     <!-- Right button -->
     <button id="swipe-right-btn" class="swipe-btn swipe-right" aria-label="Swipe right">&#8594;</button>
@@ -44,6 +43,9 @@
     <button id="watchlater-btn" class="action-btn btn-watchlater" aria-label="Watch later">&#9733;</button>
     <button id="like-btn" class="action-btn btn-like" aria-label="Like" aria-pressed="false">&#10084;</button>
   </div>
+
+  <!-- Watchlist notification -->
+  <div id="status-message" class="status-message" role="status" aria-live="polite"></div>
 
   <!--prefrence section pop up for after the 20 movies-->
   <div id="preference-modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="preference-title" hidden>
