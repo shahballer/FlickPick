@@ -42,15 +42,18 @@ if (!$tmdb_id || $tmdb_id <= 0) {
     exit;
 }
 
+// Set the media type
+$media_type = 'movie';
+
 try {
 
     // Insert the movie into the user's watchlist
     $stmt = $conn->prepare(
-        'INSERT INTO watchlist (user_id, tmdb_id)
-         VALUES (?, ?)'
+        'INSERT INTO watchlist (user_id, tmdb_id, media_type)
+         VALUES (?, ?, ?)'
     );
 
-    $stmt->bind_param('ii', $user_id, $tmdb_id);
+    $stmt->bind_param('iis', $user_id, $tmdb_id, $media_type);
 
     $stmt->execute();
 
