@@ -5,6 +5,9 @@ const API_URL = 'http://localhost:8888/FlickPick/callAPI.php?format=json';
 // PHP endpoint for saving movies to the user's watchlist
 const WATCHLIST_URL = 'http://localhost:8888/FlickPick/saveToWatchlist.php';
 
+// PHP endpoint for saving movies to the user's seen list
+const SEEN_URL = 'http://localhost:8888/FlickPick/saveToSeen.php';
+
 //drag 100 px to count as swipe
 const Swipe_Threshold = 100;
 
@@ -68,10 +71,58 @@ async function saveMovieToWatchlist(movieId) {
     }
 }
 
+// Save a movie to the logged-in user's seen list.
+async function saveMovieToSeen(movieId) {
+    const formData = new FormData();
+    formData.append('tmdb_id', movieId);
+
+    const response = await fetch(SEEN_URL, {
+        method: 'POST',
+        body: formData,
+        credentials: 'same-origin'
+    });
+
+    const result = await response.json();
+
+    if (!response.ok || !result.success) {
+        throw new Error(
+            result.message || 'Unable to save movie to seen list.'
+        );
+    }
+}
+
+
 //ids of movies user swiped already, liked. Genre id of preferred genres
 const seenIds = new Set();
 const favoriteIds = new Set();
 let preferredGenres = new Set();
+
+// Load previously seen movie IDs from the database
+async function loadSeenMovies() {
+
+    try {
+        const response = await fetch(
+            'http://localhost:8888/FlickPick/getSeenMovies.php',
+            {
+                credentials: 'same-origin'
+            }
+        );
+
+        if (!response.ok) {
+            throw new Error('Unable to load seen movies.');
+        }
+
+        const seenMovies = await response.json();
+
+        // Add previously seen movie IDs to the Set
+        seenMovies.forEach(function (movieId) {
+            seenIds.add(Number(movieId));
+        });
+
+    } catch (error) {
+        console.error('Error loading seen movies:', error);
+    }
+}
 
 //Swipe states, holding card? swiping? pointer position, and card drag distance
 let isDragging = false;
@@ -233,13 +284,14 @@ function resetCardStyle() {
     stampPassElement.style.opacity = 0;
 }
 
-// card disappears, track what user chose, and next movie
+// Card disappears, track what user chose, and move to next movie
 async function swipeCard(direction) {
 
     // Ignore input if there is no active card or animation is running
     if (isAnimating || cardElement.hidden || movies.length === 0) {
         return;
     }
+
     isAnimating = true;
     const movie = movies[currentIndex];
 
@@ -255,26 +307,36 @@ async function swipeCard(direction) {
                 watchLater.push(movie);
             }
 
-            // Display the message returned by PHP
             showMessage(saveMessage);
 
         } catch (error) {
             console.error('Watchlist error:', error);
             showMessage(error.message || 'Unable to save movie.');
 
-            // Keep movie on screen if saving fails
             isAnimating = false;
             snapBack();
             return;
         }
-    } else {
+    }
 
-        // User swiped left
+    // SAVE movie to the seen database (both directions)
+    try {
+        await saveMovieToSeen(movie.id);
+
+    } catch (error) {
+        console.error('Seen list error:', error);
+
+        isAnimating = false;
+        snapBack();
+        return;
+    }
+
+    // User swiped left
+    if (direction === 'left') {
         skipped.push(movie);
-
-        // Display ignored notification
         showMessage('Ignored');
     }
+
     const sign = direction === 'right' ? 1 : -1;
 
     // Display the correct swipe stamp
@@ -445,5 +507,11 @@ document.getElementById('preference-continue-btn').addEventListener('click', fun
     loadMovies();
 });
 
-//initial load
-loadMovies();
+// Initial load
+async function initializeFlickPick() {
+    await loadSeenMovies();
+    await loadMovies();
+}
+
+initializeFlickPick();
+
