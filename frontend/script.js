@@ -5,6 +5,9 @@ const API_URL = 'http://localhost:8888/FlickPick/callAPI.php?format=json';
 // PHP endpoint for saving movies to the user's watchlist
 const WATCHLIST_URL = 'http://localhost:8888/FlickPick/saveToWatchlist.php';
 
+// PHP endpoint for saving movies to the user's seen list
+const SEEN_URL = 'http://localhost:8888/FlickPick/saveToSeen.php';
+
 //drag 100 px to count as swipe
 const Swipe_Threshold = 100;
 
@@ -68,10 +71,117 @@ async function saveMovieToWatchlist(movieId) {
     }
 }
 
+
+// Save a movie to the logged-in user's seen list.
+async function saveMovieToSeen(movieId) {
+
+    const formData = new FormData();
+    formData.append('tmdb_id', movieId);
+
+    try {
+
+        console.log('Saving movie to seen list:', movieId);
+        console.log('Sending POST request to:', SEEN_URL);
+
+        const response = await fetch(SEEN_URL, {
+            method: 'POST',
+            body: formData,
+            credentials: 'same-origin'
+        });
+
+        console.log('Seen list HTTP status:', response.status);
+        console.log('Seen list request method:', 'POST');
+
+        const responseText = await response.text();
+
+        console.log('Seen list raw PHP response:', responseText);
+
+        let result;
+
+        try {
+            result = JSON.parse(responseText);
+        } catch (error) {
+            throw new Error('PHP did not return valid JSON: ' + responseText);
+        }
+
+        if (!response.ok || !result.success) {
+            throw new Error(
+                result.message || 'Unable to save movie to seen list.'
+            );
+        }
+
+        console.log('Movie successfully saved to seen list!');
+
+        return result;
+
+    } catch (error) {
+
+        console.error('Error saving movie to seen list:', error);
+
+        throw error;
+    }
+}
+
+
+
 //ids of movies user swiped already, liked. Genre id of preferred genres
 const seenIds = new Set();
 const favoriteIds = new Set();
 let preferredGenres = new Set();
+
+// Load previously seen movie IDs from the database
+async function loadSeenMovies() {
+
+    try {
+        const response = await fetch(
+            'http://localhost:8888/FlickPick/getSeenMovies.php',
+            {
+                credentials: 'same-origin'
+            }
+        );
+
+        if (!response.ok) {
+            throw new Error('Unable to load seen movies.');
+        }
+
+        const seenMovies = await response.json();
+
+        // DEBUG: See exactly what PHP returned
+        console.log('Seen movies PHP response:', seenMovies);
+
+        // Handle different possible PHP response formats
+        let movieIds = seenMovies;
+
+        if (!Array.isArray(movieIds)) {
+            movieIds = seenMovies.seenMovies ||
+                       seenMovies.movies ||
+                       seenMovies.seen ||
+                       [];
+        }
+
+        // Make sure PHP returned an array
+        if (!Array.isArray(movieIds)) {
+            throw new Error('PHP did not return a valid seen movies array.');
+        }
+
+        // Add previously seen movie IDs to the Set
+        movieIds.forEach(function (movieId) {
+
+            const id = Number(movieId);
+
+            if (Number.isFinite(id)) {
+                seenIds.add(id);
+            }
+
+        });
+
+        // DEBUG: Display loaded movie IDs
+        console.log('Loaded seen movie IDs:', Array.from(seenIds));
+
+    } catch (error) {
+        console.error('Error loading seen movies:', error);
+    }
+}
 
 //Swipe states, holding card? swiping? pointer position, and card drag distance
 let isDragging = false;
@@ -90,6 +200,7 @@ const statusMessageEl = document.getElementById('status-message');
 
 const stampSaveElement = document.getElementById('stamp-save');
 const stampPassElement = document.getElementById('stamp-pass');
+const seenBadge = document.getElementById('seen-badge');
 const likeBtn = document.getElementById('like-btn');
 const modalElement = document.getElementById('preference-modal');
 
@@ -149,10 +260,13 @@ async function loadMovies() {
         }
 
         const data = await response.json();
-
-        //discard movies that L swipped
-        movies = data.movies.filter(function (movie) {
-            return !seenIds.has(movie.id);
+        
+        // Keep all movies and identify previously seen titles
+        movies = data.movies.map(function (movie) { 
+            return {
+                ...movie,
+                alreadySeen: seenIds.has(Number(movie.id))
+            };
         });
 
         currentIndex = 0;
@@ -186,6 +300,8 @@ function renderCard() {
 
     movieTitleEl.textContent = movie.title;
     movieDescriptEl.textContent = movie.overview || 'No description is available';
+    
+    seenBadge.hidden = !movie.alreadySeen;
 
     //movie rating
     if (movie.vote_average !== null && movie.vote_average !== undefined) {
@@ -233,13 +349,14 @@ function resetCardStyle() {
     stampPassElement.style.opacity = 0;
 }
 
-// card disappears, track what user chose, and next movie
+// Card disappears, track what user chose, and move to next movie
 async function swipeCard(direction) {
 
     // Ignore input if there is no active card or animation is running
     if (isAnimating || cardElement.hidden || movies.length === 0) {
         return;
     }
+
     isAnimating = true;
     const movie = movies[currentIndex];
 
@@ -255,26 +372,36 @@ async function swipeCard(direction) {
                 watchLater.push(movie);
             }
 
-            // Display the message returned by PHP
             showMessage(saveMessage);
 
         } catch (error) {
             console.error('Watchlist error:', error);
             showMessage(error.message || 'Unable to save movie.');
 
-            // Keep movie on screen if saving fails
             isAnimating = false;
             snapBack();
             return;
         }
-    } else {
+    }
 
-        // User swiped left
+    // SAVE movie to the seen database (both directions)
+    try {
+        await saveMovieToSeen(movie.id);
+
+    } catch (error) {
+        console.error('Seen list error:', error);
+
+        isAnimating = false;
+        snapBack();
+        return;
+    }
+
+    // User swiped left
+    if (direction === 'left') {
         skipped.push(movie);
-
-        // Display ignored notification
         showMessage('Ignored');
     }
+
     const sign = direction === 'right' ? 1 : -1;
 
     // Display the correct swipe stamp
@@ -445,5 +572,10 @@ document.getElementById('preference-continue-btn').addEventListener('click', fun
     loadMovies();
 });
 
-//initial load
-loadMovies();
+// Initial load
+async function initializeFlickPick() {
+    await loadSeenMovies();
+    await loadMovies();
+}
+
+initializeFlickPick();

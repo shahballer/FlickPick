@@ -22,9 +22,11 @@
 
       <div id="stamp-save" class="stamp stamp-save">Watch Later</div>
       <div id="stamp-pass" class="stamp stamp-pass">Skip</div>
+      <div id="seen-badge" class="seen-badge" hidden>✓ viewed before</div>
 
       <img id="movie-poster" class="poster" alt="" draggable="false" hidden>
       <div id="poster-placeholder" class="poster-placeholder">Poster</div>
+      <div id="seen-badge" class="seen-badge" hidden>✓ Previously viewed</div>
       <h2 id="movie-title" class="movie-title">Loading...</h2>
       <p id="movie-description" class="movie-description"></p>
       <p class="movie-rating">Rating: <span id="movie-rating"></span></p>
