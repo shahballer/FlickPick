@@ -71,25 +71,57 @@ async function saveMovieToWatchlist(movieId) {
     }
 }
 
+
 // Save a movie to the logged-in user's seen list.
 async function saveMovieToSeen(movieId) {
+
     const formData = new FormData();
     formData.append('tmdb_id', movieId);
 
-    const response = await fetch(SEEN_URL, {
-        method: 'POST',
-        body: formData,
-        credentials: 'same-origin'
-    });
+    try {
 
-    const result = await response.json();
+        console.log('Saving movie to seen list:', movieId);
+        console.log('Sending POST request to:', SEEN_URL);
 
-    if (!response.ok || !result.success) {
-        throw new Error(
-            result.message || 'Unable to save movie to seen list.'
-        );
+        const response = await fetch(SEEN_URL, {
+            method: 'POST',
+            body: formData,
+            credentials: 'same-origin'
+        });
+
+        console.log('Seen list HTTP status:', response.status);
+        console.log('Seen list request method:', 'POST');
+
+        const responseText = await response.text();
+
+        console.log('Seen list raw PHP response:', responseText);
+
+        let result;
+
+        try {
+            result = JSON.parse(responseText);
+        } catch (error) {
+            throw new Error('PHP did not return valid JSON: ' + responseText);
+        }
+
+        if (!response.ok || !result.success) {
+            throw new Error(
+                result.message || 'Unable to save movie to seen list.'
+            );
+        }
+
+        console.log('Movie successfully saved to seen list!');
+
+        return result;
+
+    } catch (error) {
+
+        console.error('Error saving movie to seen list:', error);
+
+        throw error;
     }
 }
+
 
 
 //ids of movies user swiped already, liked. Genre id of preferred genres
@@ -114,10 +146,37 @@ async function loadSeenMovies() {
 
         const seenMovies = await response.json();
 
+        // DEBUG: See exactly what PHP returned
+        console.log('Seen movies PHP response:', seenMovies);
+
+        // Handle different possible PHP response formats
+        let movieIds = seenMovies;
+
+        if (!Array.isArray(movieIds)) {
+            movieIds = seenMovies.seenMovies ||
+                       seenMovies.movies ||
+                       seenMovies.seen ||
+                       [];
+        }
+
+        // Make sure PHP returned an array
+        if (!Array.isArray(movieIds)) {
+            throw new Error('PHP did not return a valid seen movies array.');
+        }
+
         // Add previously seen movie IDs to the Set
-        seenMovies.forEach(function (movieId) {
-            seenIds.add(Number(movieId));
+        movieIds.forEach(function (movieId) {
+
+            const id = Number(movieId);
+
+            if (Number.isFinite(id)) {
+                seenIds.add(id);
+            }
+
         });
+
+        // DEBUG: Display loaded movie IDs
+        console.log('Loaded seen movie IDs:', Array.from(seenIds));
 
     } catch (error) {
         console.error('Error loading seen movies:', error);
@@ -514,4 +573,3 @@ async function initializeFlickPick() {
 }
 
 initializeFlickPick();
-
