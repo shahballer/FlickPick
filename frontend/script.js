@@ -200,6 +200,7 @@ const statusMessageEl = document.getElementById('status-message');
 
 const stampSaveElement = document.getElementById('stamp-save');
 const stampPassElement = document.getElementById('stamp-pass');
+const seenBadge = document.getElementById('seen-badge');
 const likeBtn = document.getElementById('like-btn');
 const modalElement = document.getElementById('preference-modal');
 
@@ -259,10 +260,13 @@ async function loadMovies() {
         }
 
         const data = await response.json();
-
-        //discard movies that L swipped
-        movies = data.movies.filter(function (movie) {
-            return !seenIds.has(movie.id);
+        
+        // Keep all movies and identify previously seen titles
+        movies = data.movies.map(function (movie) { 
+            return {
+                ...movie,
+                alreadySeen: seenIds.has(Number(movie.id))
+            };
         });
 
         currentIndex = 0;
@@ -296,6 +300,8 @@ function renderCard() {
 
     movieTitleEl.textContent = movie.title;
     movieDescriptEl.textContent = movie.overview || 'No description is available';
+    
+    seenBadge.hidden = !movie.alreadySeen;
 
     //movie rating
     if (movie.vote_average !== null && movie.vote_average !== undefined) {
