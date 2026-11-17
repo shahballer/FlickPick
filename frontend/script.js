@@ -1,12 +1,12 @@
 
 //movie data
-const API_URL = 'http://localhost:8888/FlickPick/callAPI.php?format=json';
 
-// PHP endpoint for saving movies to the user's watchlist
-const WATCHLIST_URL = 'http://localhost:8888/FlickPick/saveToWatchlist.php';
+const API_URL = '../callAPI.php?format=json';
 
-// PHP endpoint for saving movies to the user's seen list
-const SEEN_URL = 'http://localhost:8888/FlickPick/saveToSeen.php';
+const WATCHLIST_URL = '../saveToWatchlist.php';
+
+const SEEN_URL = '../saveToSeen.php';
+
 
 //drag 100 px to count as swipe
 const Swipe_Threshold = 100;
