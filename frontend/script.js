@@ -134,12 +134,11 @@ async function loadSeenMovies() {
 
     try {
         const response = await fetch(
-            'http://localhost:8888/FlickPick/getSeenMovies.php',
+            '../getSeenMovies.php',
             {
                 credentials: 'same-origin'
             }
         );
-
         if (!response.ok) {
             throw new Error('Unable to load seen movies.');
         }
