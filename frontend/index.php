@@ -20,18 +20,20 @@
     <!-- Movie card container -->
     <section class="movie-card" id="movie-card">
 
-      <div id="stamp-save" class="stamp stamp-save">Watch Later</div>
-      <div id="stamp-pass" class="stamp stamp-pass">Skip</div>
-      <div id="seen-badge" class="seen-badge" hidden>✓ viewed before</div>
+     
+<div id="stamp-save" class="stamp stamp-save">Watch Later</div>
+<div id="stamp-pass" class="stamp stamp-pass">Skip</div>
 
-      <img id="movie-poster" class="poster" alt="" draggable="false" hidden>
-      <div id="poster-placeholder" class="poster-placeholder">Poster</div>
-      <div id="seen-badge" class="seen-badge" hidden>✓ Previously viewed</div>
-      <h2 id="movie-title" class="movie-title">Loading...</h2>
-      <p id="movie-description" class="movie-description"></p>
-      <p class="movie-rating">Rating: <span id="movie-rating"></span></p>
-      <p class="movie-services">Available on: <span id="movie-services">Coming Soon</span></p>
-    </section>
+<img id="movie-poster" class="poster" alt="" draggable="false" hidden>
+<div id="poster-placeholder" class="poster-placeholder">Poster</div>
+
+<div id="seen-badge" class="seen-badge" hidden>✓ Previously viewed</div>
+
+<h2 id="movie-title" class="movie-title">Loading...</h2>
+<p id="movie-description" class="movie-description"></p>
+<p class="movie-rating">Rating: <span id="movie-rating"></span></p>
+<p class="movie-services">Available on: <span id="movie-services">Coming Soon</span></p>
+</section>
 
     <!-- Right button -->
     <button id="swipe-right-btn" class="swipe-btn swipe-right" aria-label="Swipe right">&#8594;</button>
