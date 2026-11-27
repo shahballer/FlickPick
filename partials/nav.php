@@ -1,25 +1,29 @@
 <?php
 // navigation bar shared by each page
 
-// page must call session_start() before any HTML is sent, then include this file to where nave bar should appear
+// page must call session_start() before HTML is sent, then include this file to where nave bar should appear
 //   include __DIR__ . '/partials/nav.php';  (pgs in project folder)
 //  include dirname(__DIR__) . '/partials/nav.php';  (pgs in frontend folder)
 
 //URL of project folder inside
+
 $base = '/FlickPick'; // adjust this to the URL of what your folder is named
 
 //user signed in when sign in page stored username in session
 $isLoggedIn = isset($_SESSION['username']);
+
+//current page
+$currentPage = basename($_SERVER['SCRIPT_NAME']);
 ?>
 <header class = "navbar">
-    <nav class="nav-left">
+    <nav class="nav-left" aria-label="Main">
         <?php if ($isLoggedIn): ?>
             <a href="<?= $base ?>/logout.php">Logout</a>
         <?php else: ?>
-            <a href="<?= $base ?>/signIn.php">Login</a>
+            <a href="<?= $base ?>/signIn.php"<?= $currentPage === 'signIn.php' ? 'aria-current="page"' : '' ?>>Login</a>
         <?php endif; ?>
         <a href="#">Random</a>
-        <a href="#">Watch Later</a>
+        <a href="<?= $base ?>/frontend/watchLater.php"<?= $currentPage === 'watchLater.php' ? 'aria-current="page"' : '' ?>>Watch Later</a>
         <a href="#"> Profile</a>
     </nav>
     <div class="nav-right">
